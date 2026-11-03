@@ -7,12 +7,13 @@ class Database {
         $db   = getenv('DB_NAME') ?: 'clinica_dental';
         $port = getenv('DB_PORT') ?: 3306;
 
-        $conexion = new mysqli($host, $user, $pass, $db, $port);
-        if ($conexion->connect_error) {
-            die("Error de conexión: " . $conexion->connect_error);
+        try {
+            $conexion = new PDO("mysql:host=$host;port=$port;dbname=$db;charset=utf8", $user, $pass);
+            $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            return $conexion;
+        } catch (PDOException $e) {
+            die("Error de conexión: " . $e->getMessage());
         }
-        $conexion->set_charset("utf8");
-        return $conexion;
     }
 }
 ?>
