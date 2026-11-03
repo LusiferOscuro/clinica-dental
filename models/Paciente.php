@@ -1,17 +1,31 @@
 <?php
-require_once "config/Database.php";
+require_once "models/Paciente.php";
 
-class Paciente {
-    public static function obtenerTodos() {
-        $db = Database::conectar();
-        $stmt = $db->query("SELECT * FROM pacientes ORDER BY id DESC");
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+class PacienteController {
+
+    public function lista() {
+        $paciente = new Paciente();
+        
+        // Comprueba si existe la función 'listar', si no, intenta con las alternativas comunes
+        if (method_exists($paciente, 'listar')) {
+            $pacientes = $paciente->listar();
+        } elseif (method_exists($paciente, 'mostrar')) {
+            $pacientes = $paciente->mostrar();
+        } elseif (method_exists($paciente, 'obtenerTodos')) {
+            $pacientes = $paciente->obtenerTodos();
+        } else {
+            $pacientes = [];
+        }
+
+        require_once "views/paciente/lista.php";
     }
 
-    public static function agregar($nombre, $apellido, $ci, $telefono) {
-        $db = Database::conectar();
-        $stmt = $db->prepare("INSERT INTO pacientes (nombre, apellido, ci, telefono) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$nombre, $apellido, $ci, $telefono]);
+    public function index() {
+        $this->lista();
+    }
+
+    public function formulario() {
+        require_once "views/paciente/formulario.php";
     }
 }
 ?>
