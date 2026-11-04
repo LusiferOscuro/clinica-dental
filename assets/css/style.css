@@ -1,0 +1,112 @@
+:root {
+    --primary-color: #0d6efd;
+    --secondary-color: #0b5ed7;
+    --dark-bg: #111827;
+    --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    --border-radius: 16px;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background-color: #f8fafc;
+    color: #334155;
+}
+
+/* Navbar Personalizada */
+.custom-navbar {
+    background: #0f172a !important;
+    padding: 1rem 0;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    font-size: 1.35rem;
+    letter-spacing: -0.5px;
+}
+
+.nav-link {
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #38bdf8 !important;
+}
+
+/* Hero Banner Exclusivo */
+.hero-banner {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    border-radius: 24px;
+    padding: 4rem 2rem;
+    color: #fff;
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-banner::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+/* Cards & Tablas Modernas */
+.custom-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.custom-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.table-custom {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table-custom thead th {
+    background-color: #f1f5f9;
+    color: #475569;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    padding: 1rem;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.table-custom tbody tr td {
+    padding: 1rem;
+    vertical-align: middle;
+}
+
+/* Botón de Pago QR */
+.btn-qr-custom {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    padding: 0.5rem 1.2rem;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+    transition: all 0.2s ease;
+}
+
+.btn-qr-custom:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    color: #fff;
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+}
