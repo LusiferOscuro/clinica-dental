@@ -78,6 +78,7 @@
                         <a href="https://wa.me/<?= $tel ?>?text=<?= $txtWa ?>" target="_blank" class="btn btn-sm btn-success" title="Recordatorio WhatsApp">📲 WA</a>
                         <a href="index.php?controller=home&action=index&cambiar_estado=Atendida&cita_id=<?= $c['id'] ?>" class="btn btn-sm btn-outline-primary">✓ Atendida</a>
                         <a href="index.php?controller=odontograma&action=index&paciente_id=<?= $c['paciente_id'] ?>" class="btn btn-sm btn-outline-dark">🦷 Ficha</a>
+                        <a href="index.php?controller=home&action=index&eliminar_cita=<?= $c['id'] ?>" class="btn btn-sm btn-danger" title="Eliminar cita" onclick="return confirm('¿Eliminar esta cita de la agenda?');">🗑️</a>
                     </td>
                 </tr>
             <?php endforeach; ?>
