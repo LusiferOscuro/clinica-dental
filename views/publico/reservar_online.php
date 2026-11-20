@@ -57,11 +57,15 @@
                             <div class="qr-box shadow">
                                 <div class="fw-bold mb-2" style="letter-spacing:1px;">BANCO GANADERO</div>
                                 <div class="qr-inner">
-                                    <img src="publico/img/qr-pago.png.jpeg" alt="QR Banco Ganadero" class="img-fluid rounded mb-2" style="max-height: 250px;"
-                                         onerror="this.style.display='none'; document.getElementById('qr-fallback').style.display='block';">
-                                    <div id="qr-fallback" style="display:none;" class="p-3 border rounded bg-light small text-muted">
-                                        [Sube tu imagen QR a <code>views/publico/img/qr-pago.png.jpeg</code>]
-                                    </div>
+                                    <?php 
+                                    $rutaQr = __DIR__ . '/img/qr-pago.png.jpeg';
+                                    $qrBase64 = file_exists($rutaQr) ? 'data:image/jpeg;base64,' . base64_encode(file_get_contents($rutaQr)) : '';
+                                    ?>
+                                    <?php if ($qrBase64): ?>
+                                   <img src="<?= $qrBase64 ?>" alt="QR Banco Ganadero" class="img-fluid rounded mb-2" style="max-height: 250px;">
+                             <?php else: ?>
+                            <div class="p-3 border rounded bg-light small text-danger">No se encontró: <?= $rutaQr ?></div>
+                            <?php endif; ?>
                                     <h3 class="fw-bold text-success mb-1">Bs <?= number_format($resumenReserva['pagar_ahora_bs'], 2) ?></h3>
                                     <div class="fw-bold small">VON BORRIES GUARDIA WILSON PERCY</div>
                                     <div class="text-success small fw-semibold">Cuenta de abono CA 1311057871</div>
