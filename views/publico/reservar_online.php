@@ -60,7 +60,7 @@
                                     <img src="publico/img/qr-pago.png.jpeg" alt="QR Banco Ganadero" class="img-fluid rounded mb-2" style="max-height: 250px;"
                                          onerror="this.style.display='none'; document.getElementById('qr-fallback').style.display='block';">
                                     <div id="qr-fallback" style="display:none;" class="p-3 border rounded bg-light small text-muted">
-                                        [Sube tu imagen QR a <code>public/img/qr-pago.png.jpeg</code>]
+                                        [Sube tu imagen QR a <code>publico/img/qr-pago.png.jpeg</code>]
                                     </div>
                                     <h3 class="fw-bold text-success mb-1">Bs <?= number_format($resumenReserva['pagar_ahora_bs'], 2) ?></h3>
                                     <div class="fw-bold small">VON BORRIES GUARDIA WILSON PERCY</div>
