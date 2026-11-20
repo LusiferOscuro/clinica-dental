@@ -57,7 +57,7 @@
                             <div class="qr-box shadow">
                                 <div class="fw-bold mb-2" style="letter-spacing:1px;">BANCO GANADERO</div>
                                 <div class="qr-inner">
-                                    <img src="publico/img/qr-pago.png" alt="QR Banco Ganadero" class="img-fluid rounded mb-2" style="max-height: 250px;"
+                                    <img src="publico/img/qr-pago.png.jpeg" alt="QR Banco Ganadero" class="img-fluid rounded mb-2" style="max-height: 250px;"
                                          onerror="this.style.display='none'; document.getElementById('qr-fallback').style.display='block';">
                                     <div id="qr-fallback" style="display:none;" class="p-3 border rounded bg-light small text-muted">
                                         [Sube tu imagen QR a <code>public/img/qr-pago.png</code>]
