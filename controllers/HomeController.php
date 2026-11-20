@@ -38,6 +38,12 @@ class HomeController {
             Auth::registrarAuditoria($this->db, 'citas', (int)$_GET['cita_id'], 'UPDATE', 'Estado cambiado a ' . $_GET['cambiar_estado']);
             header('Location: index.php?controller=home&action=index');
             exit;
+        if (isset($_GET['eliminar_cita'])) {
+            $stmt = $this->db->prepare("DELETE FROM citas WHERE id = ?");
+            $stmt->execute([(int)$_GET['eliminar_cita']]);
+            header("Location: index.php?controller=home&action=index");
+            exit;
+            }
         }
 
         $totalPacientes = $this->db->query("SELECT COUNT(*) FROM pacientes")->fetchColumn();
