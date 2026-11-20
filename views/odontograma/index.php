@@ -1,11 +1,17 @@
 <?php require dirname(__DIR__) . '/layout/header.php'; ?>
 <style>
-    .arcada { display: flex; justify-content: center; gap: 14px; margin: 16px 0; flex-wrap: wrap; }
-    .cuadrante { display: flex; gap: 6px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; }
-    .diente { text-align: center; width: 44px; }
-    .diente-num { font-weight: 700; font-size: 12px; margin-bottom: 3px; }
-    .pieza-svg { width: 40px; height: 40px; cursor: pointer; }
-    .cara { fill: #ffffff; stroke: #334155; stroke-width: 1.5; }
+    .arcada { display: flex; justify-content: center; gap: 18px; margin: 14px 0; flex-wrap: wrap; }
+    .cuadrante { display: flex; gap: 6px; padding: 12px; border: 1px solid #cbd5e1; border-radius: 12px; background: #f8fafc; }
+    .diente { text-align: center; width: 46px; transition: transform 0.15s ease; }
+    .diente:hover { transform: translateY(-3px); }
+    .diente.pediatrico { width: 40px; }
+    .diente-num { font-weight: 800; font-size: 12px; color: #1e293b; margin-bottom: 2px; }
+    .diente-tipo { font-size: 9px; color: #64748b; display: block; margin-bottom: 3px; }
+    .raiz-svg { width: 42px; height: 26px; display: block; margin: 0 auto; }
+    .diente.pediatrico .raiz-svg { width: 34px; height: 20px; }
+    .pieza-svg { width: 42px; height: 42px; cursor: pointer; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.08)); }
+    .diente.pediatrico .pieza-svg { width: 35px; height: 35px; }
+    .cara { fill: #ffffff; stroke: #475569; stroke-width: 2; transition: fill 0.15s; }
     .cara:hover { fill: #e2e8f0; }
     .estado-Caries { fill: #ef4444 !important; }
     .estado-Resina_Buena { fill: #3b82f6 !important; }
@@ -23,7 +29,7 @@
 <div class="card border-0 shadow-sm p-4">
     <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
         <div>
-            <h4 class="fw-bold mb-1">Odontograma Clínico FDI (Adulto & Pediátrico)</h4>
+            <h4 class="fw-bold mb-1">🦷 Odontograma Clínico Anatómico FDI</h4>
             <form method="GET" class="d-flex align-items-center gap-2">
                 <input type="hidden" name="controller" value="odontograma">
                 <input type="hidden" name="action" value="index">
@@ -35,8 +41,8 @@
             </form>
         </div>
         <div class="btn-group">
-            <button class="btn btn-outline-primary active" id="btnAdulto">Dentición Adulta (32)</button>
-            <button class="btn btn-outline-primary" id="btnPediatrica">Dentición Pediátrica (20)</button>
+            <button class="btn btn-primary active" id="btnAdulto">🧑 Dentición Adulta (32)</button>
+            <button class="btn btn-outline-primary" id="btnPediatrica">🧒 Dentición Pediátrica (20)</button>
         </div>
     </div>
 
@@ -49,6 +55,7 @@
         <button class="btn btn-sm btn-outline-success tool-btn" data-estado="Sano">⚪ Limpiar (Sano)</button>
     </div>
 
+    <div class="text-center small fw-bold text-muted">ARCADA SUPERIOR</div>
     <div class="arcada">
         <div class="cuadrante" id="c1"></div>
         <div class="cuadrante" id="c2"></div>
@@ -57,6 +64,7 @@
         <div class="cuadrante" id="c4"></div>
         <div class="cuadrante" id="c3"></div>
     </div>
+    <div class="text-center small fw-bold text-muted">ARCADA INFERIOR</div>
 
     <h6 class="fw-bold mt-4">Historial de Hallazgos Clínicos Guardados</h6>
     <ul class="list-group list-group-flush small" id="log-hallazgos">
@@ -82,21 +90,60 @@ const mapas = {
     }
 };
 
+function getSiluetaRaiz(num, esSuperior) {
+    const unidad = num % 10;
+    const esMolar = (tipoDenticion === 'Adulto' && unidad >= 6) || (tipoDenticion === 'Pediatrica' && unidad >= 4);
+    const esPremolar = (tipoDenticion === 'Adulto' && (unidad === 4 || unidad === 5));
+    const fill = tipoDenticion === 'Pediatrica' ? '#fef3c7' : '#f1f5f9';
+    const stroke = '#64748b';
+
+    let paths = '';
+    if (esMolar) {
+        paths = `<path d="M18,55 Q12,15 24,4 Q34,25 42,55 Z" fill="${fill}" stroke="${stroke}" stroke-width="2.5"/>
+                 <path d="M40,55 Q50,12 58,4 Q66,25 64,55 Z" fill="${fill}" stroke="${stroke}" stroke-width="2.5"/>
+                 <path d="M58,55 Q72,18 82,6 Q86,30 78,55 Z" fill="${fill}" stroke="${stroke}" stroke-width="2.5"/>`;
+    } else if (esPremolar) {
+        paths = `<path d="M25,55 Q24,14 36,4 Q46,25 50,55 Z" fill="${fill}" stroke="${stroke}" stroke-width="2.5"/>
+                 <path d="M50,55 Q56,14 66,4 Q76,25 74,55 Z" fill="${fill}" stroke="${stroke}" stroke-width="2.5"/>`;
+    } else {
+        paths = `<path d="M26,55 Q34,12 50,3 Q66,12 74,55 Z" fill="${fill}" stroke="${stroke}" stroke-width="2.5"/>`;
+    }
+    const transform = esSuperior ? '' : 'transform="scale(1,-1) translate(0,-60)"';
+    return `<svg class="raiz-svg" viewBox="0 0 100 60"><g ${transform}>${paths}</g></svg>`;
+}
+
+function getEtiquetaPieza(num) {
+    const u = num % 10;
+    if (tipoDenticion === 'Pediatrica') return u >= 4 ? 'Molar Dec.' : (u === 3 ? 'Canino' : 'Incisivo');
+    return u >= 6 ? 'Molar' : (u >= 4 ? 'Premolar' : (u === 3 ? 'Canino' : 'Incisivo'));
+}
+
 function renderOdontograma(tipo) {
     tipoDenticion = tipo;
+    const clasePed = tipo === 'Pediatrica' ? 'pediatrico' : '';
     for (const [id, piezas] of Object.entries(mapas[tipo])) {
-        document.getElementById(id).innerHTML = piezas.map(num => `
-            <div class="diente">
-                <div class="diente-num">${num}</div>
+        const esSuperior = (id === 'c1' || id === 'c2');
+        document.getElementById(id).innerHTML = piezas.map(num => {
+            const raiz = getSiluetaRaiz(num, esSuperior);
+            const corona = `
                 <svg class="pieza-svg" viewBox="0 0 100 100" data-pieza="${num}">
-                    <polygon class="cara" data-cara="V" points="0,0 100,0 75,25 25,25" />
-                    <polygon class="cara" data-cara="L" points="25,75 75,75 100,100 0,100" />
-                    <polygon class="cara" data-cara="M" points="0,0 25,25 25,75 0,100" />
-                    <polygon class="cara" data-cara="D" points="75,25 100,0 100,100 75,75" />
-                    <rect class="cara" data-cara="O" x="25" y="25" width="50" height="50" />
-                </svg>
-            </div>
-        `).join('');
+                    <defs><clipPath id="clip-${num}"><rect x="4" y="4" width="92" height="92" rx="34" ry="34"/></clipPath></defs>
+                    <g clip-path="url(#clip-${num})">
+                        <polygon class="cara" data-cara="V" points="0,0 100,0 72,28 28,28" />
+                        <polygon class="cara" data-cara="L" points="28,72 72,72 100,100 0,100" />
+                        <polygon class="cara" data-cara="M" points="0,0 28,28 28,72 0,100" />
+                        <polygon class="cara" data-cara="D" points="72,28 100,0 100,100 72,72" />
+                        <ellipse class="cara" data-cara="O" cx="50" cy="50" rx="22" ry="22" />
+                    </g>
+                    <rect x="4" y="4" width="92" height="92" rx="34" ry="34" fill="none" stroke="#334155" stroke-width="3"/>
+                </svg>`;
+            return `
+                <div class="diente ${clasePed}">
+                    <div class="diente-num">${num}</div>
+                    <span class="diente-tipo">${getEtiquetaPieza(num)}</span>
+                    ${esSuperior ? raiz + corona : corona + raiz}
+                </div>`;
+        }).join('');
     }
     bindCaras();
 }
@@ -104,7 +151,7 @@ function renderOdontograma(tipo) {
 function bindCaras() {
     document.querySelectorAll('.cara').forEach(cara => {
         cara.addEventListener('click', async function() {
-            const pieza = this.parentElement.dataset.pieza;
+            const pieza = this.closest('.pieza-svg').dataset.pieza;
             const nombreCara = this.dataset.cara;
             this.className.baseVal = 'cara' + (estadoActual !== 'Sano' ? ` estado-${estadoActual}` : '');
 
@@ -138,8 +185,16 @@ document.querySelectorAll('.tool-btn').forEach(btn => {
     });
 });
 
-document.getElementById('btnAdulto').onclick = () => renderOdontograma('Adulto');
-document.getElementById('btnPediatrica').onclick = () => renderOdontograma('Pediatrica');
+document.getElementById('btnAdulto').onclick = function() {
+    this.className = 'btn btn-primary active';
+    document.getElementById('btnPediatrica').className = 'btn btn-outline-primary';
+    renderOdontograma('Adulto');
+};
+document.getElementById('btnPediatrica').onclick = function() {
+    this.className = 'btn btn-primary active';
+    document.getElementById('btnAdulto').className = 'btn btn-outline-primary';
+    renderOdontograma('Pediatrica');
+};
 renderOdontograma('Adulto');
 </script>
 <?php require dirname(__DIR__) . '/layout/footer.php'; ?>
